@@ -1,5 +1,6 @@
 from pymongo.mongo_client import MongoClient
 from dotenv import load_dotenv
+from bson import ObjectId
 import os
 
 load_dotenv()
@@ -26,8 +27,13 @@ def create_produto():
     nome = input("Nome: ")
     preco_unitario = input("Preço unitário: ")
     vend_id = input("ID do vendedor: ")
-    vend = db.vendedor.find_one({ "id": vend_id })
-    vendedor = { "id": vend["id"], "nome": vend["nome"], "email": vend["email"] }
+
+    vend = db.vendedor.find_one({ "_id": ObjectId(vend_id) })
+    if not vend:
+        print("Vendedor não encontrado")
+        return
+
+    vendedor = { "_id": vend["_id"], "nome": vend["nome"], "email": vend["email"] }
     mydoc = { "nome": nome, "preco_unitario": preco_unitario, "vendedor": vendedor }
     x = mycol.insert_one(mydoc)
     print("Documento inserido com ID ",x.inserted_id)
@@ -40,12 +46,12 @@ def read_produto(nome):
     if not len(nome):
         mydoc = mycol.find().sort("nome")
         for x in mydoc:
-            print(f"ID: {x["id"]}, Nome: {x["nome"]}, preço unitário: {x["preco_unitario"]}")
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, preço unitário: {x["preco_unitario"]}")
     else:
         myquery = {"nome": nome}
         mydoc = mycol.find(myquery)
         for x in mydoc:
-            print(x)
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, preço unitário: {x["preco_unitario"]}")
 
 def update_produto(nome):
     #Read
@@ -64,12 +70,12 @@ def update_produto(nome):
 
     vend_id = input("Mudar id do vendedor: ")
     if len(vend_id):
-        mydoc["vendedor"]["id"] = vend_id
+        mydoc["vendedor"]["_id"] = vend_id
 
-    vend = db.vendedor.find_one({ "id": vend_id })
-    vendedor = { "id": vend["id"], "nome": vend["nome"], "email": vend["email"] }
+        vend = db.vendedor.find_one({ "_id": vend_id })
+        vendedor = { "_id": vend["_id"], "nome": vend["nome"], "email": vend["email"] }
 
-    mydoc["vendedor"] = vendedor
+        mydoc["vendedor"] = vendedor
 
     newvalues = { "$set": mydoc }
     mycol.update_one(myquery, newvalues)

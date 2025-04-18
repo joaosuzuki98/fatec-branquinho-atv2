@@ -59,12 +59,12 @@ def read_vendedor(nome):
     if not len(nome):
         mydoc = mycol.find().sort("nome")
         for x in mydoc:
-            print(f"ID: {x["id"]}, Nome: {x["nome"]}, CPF/CNPJ: {x["cpf"] if x["cpf"] else x["cnpj"]}")
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, CPF/CNPJ: {x["cpf"] if x["cpf"] else x["cnpj"]}")
     else:
         myquery = {"nome": nome}
         mydoc = mycol.find(myquery)
         for x in mydoc:
-            print(x)
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, CPF/CNPJ: {x["cpf"] if x["cpf"] else x["cnpj"]}")
 
 def update_vendedor(email):
     #Read

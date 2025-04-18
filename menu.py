@@ -2,7 +2,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
-from models import vendedor, produto
+from models import vendedor, produto, favorito, compra
 
 load_dotenv()
 uri = os.getenv('MONGODB_URL_LOCAL')
@@ -60,12 +60,12 @@ def read_usuario(nome):
     if not len(nome):
         mydoc = mycol.find().sort("nome")
         for x in mydoc:
-            print(f"ID: {x["id"]}, Nome: {x["nome"]}, CPF: {x["cpf"]}")
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, CPF: {x["cpf"]}")
     else:
         myquery = {"nome": nome}
         mydoc = mycol.find(myquery)
         for x in mydoc:
-            print(x)
+            print(f"ID: {x["_id"]}, Nome: {x["nome"]}, CPF: {x["cpf"]}")
 
 def update_usuario(email):
     #Read
@@ -124,6 +124,8 @@ while (key != 'S'):
     print("1-CRUD Usuário")
     print("2-CRUD Vendedor")
     print("3-CRUD Produto")
+    print("4-CRUD Favorito")
+    print("5-CRUD Compra")
     key = input("Digite a opção desejada? (S para sair) ")
 
     if (key == '1'):
@@ -186,7 +188,7 @@ while (key != 'S'):
             produto.create_produto()
 
         elif sub == '2':
-            nome = input("Read produot, deseja algum produto específico? Digite o nome se sim: ")
+            nome = input("Read produto, deseja algum produto específico? Digite o nome se sim: ")
             produto.read_produto(nome)
 
         elif sub == '3':
@@ -197,6 +199,55 @@ while (key != 'S'):
             print("delete produto")
             prod_id = input("ID do produto a ser deletado: ")
             produto.delete_produto(prod_id)
-      
+
+    elif (key == '4'):
+        print("Menu do favorito")
+        print("1-Create favorito")
+        print("2-Read favorito")
+        print("3-Update favorito")
+        print("4-Delete favorito")
+        sub = input("Digite a opção desejada? (V para voltar) ")
+        if sub == '1':
+            print("Create favorito")
+            favorito.create_favorito()
+
+        elif sub == '2':
+            nome = input("Read favorito, deseja algum favorito específico? Digite o nome do usuário se sim: ")
+            favorito.read_favorito(nome)
+
+        elif sub == '3':
+            fav_id = input("Update favorito, digite o ID do favorito: ")
+            favorito.update_favorito(fav_id)
+
+        elif sub == '4':
+            print("delete favorito")
+            fav_id = input("ID do favorito a ser deletado: ")
+            favorito.delete_favorito(fav_id)
+
+    elif (key == '5'):
+        print("Menu da compra")
+        print("1-Create compra")
+        print("2-Read compra")
+        print("3-Update compra")
+        print("4-Delete compra")
+        sub = input("Digite a opção desejada? (V para voltar) ")
+
+        if sub == '1':
+            print("Create compra")
+            compra.create_compra()
+
+        elif sub == '2':
+            nome = input("Read compra, deseja buscar por nome de usuário? Digite o nome se sim (ou deixe vazio): ")
+            compra.read_compra(nome)
+
+        elif sub == '3':
+            compra_id = input("Update compra, digite o ID da compra: ")
+            compra.update_compra(compra_id)
+
+        elif sub == '4':
+            print("Delete compra")
+            compra_id = input("ID da compra a ser deletada: ")
+            compra.delete_compra(compra_id)
+
 
 print("Tchau Prof...")
