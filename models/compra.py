@@ -1,14 +1,15 @@
 from datetime import datetime
 from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 from bson import ObjectId
 import os
 
 load_dotenv()
-uri = os.getenv('MONGODB_URL_LOCAL')
+uri = os.getenv('MONGODB_URL')
 
 # Create a new client and connect to the server
-client = MongoClient(uri)
+client = MongoClient(uri, server_api=ServerApi('1'))
 global db
 db = client.mercadolivre
 
